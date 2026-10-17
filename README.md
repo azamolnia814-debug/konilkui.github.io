@@ -1,0 +1,2 @@
+# konilkui.kz
+konilkuinkandai
