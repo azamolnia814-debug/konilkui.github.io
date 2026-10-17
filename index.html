@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>КӨҢІЛ-КҮЙ</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{--bg:#F6F7FB;--tx:#11152B;--card:#fff;--mut:#5b6080;--v:#7657F6;--nv:#11152B;--c:#7657F6;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#11152B;--tx:#fff;--card:#1b2040;--mut:#b6bbdc;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:"Noto Sans","Inter",system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);transition:background .4s}
+main{max-width:1040px;margin:0 auto;padding:20px}
+h1,h2,h3{margin:.3em 0}.logo{font-weight:800;letter-spacing:.04em;color:var(--v)}
+.card{background:var(--card);border-radius:20px;padding:20px;box-shadow:0 6px 24px #11152b1a;margin:14px 0}
+button,.btn{font:inherit;font-weight:700;border:0;border-radius:14px;padding:13px 20px;background:var(--v);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;margin:4px 6px 4px 0}
+button.s{background:transparent;color:var(--tx);border:2px solid var(--v)}button:disabled{opacity:.5}
+button:focus-visible,input:focus-visible{outline:3px solid #FFC857;outline-offset:2px}
+input[type=text],input[type=number]{font:inherit;padding:12px;border-radius:12px;border:2px solid #a78bfa66;width:100%;background:var(--card);color:var(--tx)}
+label{display:block;margin:10px 0;font-weight:600}
+.big{font-size:clamp(48px,12vw,110px);font-weight:800;line-height:1}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.bar{height:12px;border-radius:9px;background:#a78bfa33;overflow:hidden}.bar i{display:block;height:100%;transition:width .6s}
+.err{color:#DC2626;font-weight:700}.mut{color:var(--mut)}
+/* student */
+.stu{min-height:100vh;display:flex;flex-direction:column;justify-content:center;text-align:center;background:linear-gradient(160deg,var(--c)33,var(--bg));transition:background .4s}
+.emo{font-size:96px;transition:transform .25s}.emo.b{transform:scale(1.2)}
+input[type=range]{width:100%;height:44px;accent-color:var(--c)}
+.ticks{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+.sub{font-size:20px;padding:16px 22px;background:var(--c);width:100%;margin:16px 0 0}
+/* projector */
+.qr{background:#fff;padding:20px;border-radius:20px;display:inline-block;line-height:0}.qr svg{width:min(70vw,340px);height:auto}
+.pres{position:relative;overflow:hidden;background:var(--nv);color:#fff;border-radius:24px;text-align:center;padding:30px 16px;aspect-ratio:auto}
+.pres:fullscreen{display:flex;flex-direction:column;justify-content:center;border-radius:0}
+.pres .bg{position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,#7657F666,transparent 50%),radial-gradient(circle at 80% 80%,#36D39955,transparent 50%);animation:br 8s ease-in-out infinite alternate}
+@keyframes br{to{opacity:.55;transform:scale(1.08)}}
+.pres>*{position:relative}
+.dots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px}.dots i{width:18px;height:18px;border-radius:50%;animation:pop .5s}
+@keyframes pop{from{transform:scale(0)}}
+.col{display:flex;align-items:flex-end;gap:6px;height:180px}.col div{flex:1;text-align:center;font-size:12px}.col b{display:block;border-radius:8px 8px 0 0;min-height:2px;transition:height .6s}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><main id="app" aria-live="polite"></main>
+<script>
+const M=[["Өте нашар","😭","#B91C1C","Бүгін саған қиын болып тұрған сияқты. Өзіңе уақыт бер."],["Нашар","😢","#DC2626","Кейде көңіл күйіміз төмен болады. Бұл қалыпты жағдай."],["Көңіл күйім жоқ","😞","#F04452","Бүгінгі күнің оңай емес сияқты."],["Онша емес","😕","#F97316","Көңіл күйің сәл төмендеу екен."],["Қалыпты","😐","#F59E0B","Қалыпты күндердің бірі."],["Жаман емес","🙂","#EAB308","Жаман емес! Күнің жақсы өтуіне тілектеспіз."],["Жақсы","😊","#84CC16","Жақсы көңіл күй! 😊"],["Өте жақсы","😄","#4ADE80","Көңіл күйің көтеріңкі екен!"],["Керемет","🤩","#22C55E","Керемет! Осы көңіл күйің сақталсын!"],["Тамаша!","🥳","#059669","Тамаша! Энергияң тасып тұр! 🥳"]];
+const CATS=[["Төмен көңіл күй","😞",1,3,"#DC2626"],["Қалыпты көңіл күй","😐",4,6,"#F59E0B"],["Жақсы көңіл күй","😊",7,8,"#84CC16"],["Өте жақсы көңіл күй","🤩",9,10,"#059669"]];
+const A=document.getElementById('app'),fmt=n=>n.toFixed(1).replace('.',',');
+let db=null,unsubs=[];const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MSG={nodb:"Дерекқорға қосылу мүмкін емес. Беттің claude.ai арқылы ашылғанын тексеріңіз.",bad:"Сессия табылмады немесе сілтеме қате.",closed:"Бұл сессия жабылған. Жауап қабылданбайды.",paused:"Жауап қабылдау уақытша тоқтатылған.",fail:"Жауапты жіберу мүмкін болмады. Қайтадан көріңіз."};
+function stats(rs,exp){const n=rs.length,d=Array(10).fill(0);rs.forEach(s=>d[s-1]++);const sum=rs.reduce((a,b)=>a+b,0),avg=n?sum/n:null;
+ const cats=CATS.map(c=>{const k=d.slice(c[2]-1,c[3]).reduce((a,b)=>a+b,0);return{k,p:n?Math.round(k/n*100):0}});
+ const sd=n?Math.sqrt(rs.reduce((a,b)=>a+(b-avg)**2,0)/n):0;
+ return{n,d,avg,cats,sd,part:exp>0?Math.round(n/exp*100):null,exp}}
+function label(a){return a<=3?"Көңіл күй деңгейі төмен":a<=6?"Көңіл күй деңгейі орташа":a<=8?"Көңіл күйі жақсы":"Көңіл күйі өте жақсы"}
+function colorOf(a){return M[Math.min(9,Math.max(0,Math.round(a)-1))][2]}
+function report(s){ // deterministic Kazakh report from verified stats only
+ if(!s.n)return[["ЖАЛПЫ БАҒА","Деректер жеткіліксіз: әзірге жауаптар жоқ."]];
+ const top=s.d.indexOf(Math.max(...s.d))+1,low=s.cats[0].k;
+ return[["ЖАЛПЫ БАҒА",`Сыныптың орташа көңіл күй көрсеткіші — ${fmt(s.avg)}/10 (${s.n} жауап). ${label(s.avg)}.${s.n<5?" Жауап саны аз, сондықтан нәтиже шектеулі үлгіге негізделген.":""}`],
+ ["ДЕРЕКТЕР НЕНІ КӨРСЕТЕДІ?",`Ең жиі таңдалған балл — ${top} (${s.d[top-1]} жауап). Төмен (1–3) балл таңдағандар: ${low}, яғни ${s.cats[0].p}%. ${s.sd>2?"Жауаптар әртүрлі, сондықтан орташа көрсеткіш түрлі тәжірибені жасыруы мүмкін.":"Жауаптар бір-біріне жақын шоғырланған."}`],
+ ["МҰҒАЛІМГЕ ҰСЫНЫС",s.avg<=5?"Сабақты екі минуттық тыныс алу немесе сергіту жаттығуымен бастап, алғашқы тапсырманы жеңіл етіп беруге болады.":"Сабақтың басында екі минуттық қысқа бөлісу кезеңін өткізіп, содан кейін негізгі тапсырмаға көшуге болады."],
+ ["МАҢЫЗДЫ ЕСКЕРТПЕ","Бұл нәтиже сауалнамаға қатысқан оқушылардың сол сәттегі көңіл күйін көрсетеді. Ол психологиялық диагноз болып саналмайды."]]}
+function clear(){unsubs.forEach(u=>{try{u()}catch(e){}});unsubs=[]}
+function watch(id,cb){let sess=null,rs=[],bad=false;const push=()=>cb(sess,rs,bad);
+ unsubs.push(db.doc('sessions/'+id).onSnapshot(s=>{sess=s.data()||null;bad=!sess;push()},()=>{bad=true;push()}));
+ unsubs.push(db.collection('sessions/'+id+'/responses').onSnapshot(q=>{rs=q.docs.map(d=>d.data().score).filter(x=>Number.isInteger(x)&&x>=1&&x<=10);push()},()=>{}))}
+const link=id=>location.href.split('#')[0]+'#/m/'+id;
+function home(){clear();A.innerHTML=`<div class="logo">КӨҢІЛ-КҮЙ</div><div class="card"><h1>Сәлеметсіз бе!</h1><p>Сыныптың бүгінгі көңіл күйін бірге анықтайық.</p><p class="mut">Әр көңіл күй маңызды.</p>
+<h2>Жаңа сауалнама</h2><label>Сынып атауы<input type="text" id="cn" placeholder="8 «А»" maxlength="30"></label><label>Оқушылар саны (міндетті емес)<input type="number" id="ex" min="1" max="60" placeholder="25"></label>
+<button id="mk">Сессия құру</button><p id="e" class="err"></p></div><div class="card"><h3>Алдыңғы нәтижелер</h3><div id="hist" class="mut">Жүктелуде…</div></div>`;
+ const mk=document.getElementById('mk');mk.onclick=async()=>{const cn=document.getElementById('cn').value.trim(),ex=parseInt(document.getElementById('ex').value)||0;
+  if(!cn){e.textContent="Сынып атауын енгізіңіз.";return}if(!db){e.textContent=MSG.nodb;return}
+  mk.disabled=true;mk.textContent="Құрылуда…";const id=Math.random().toString(36).slice(2,8);
+  try{await db.doc('sessions/'+id).set({class_name:cn,expected:ex,status:'active',created:Date.now(),owner:await uid()});location.hash='#/t/'+id}catch(x){e.textContent=MSG.fail;mk.disabled=false;mk.textContent="Сессия құру"}};
+ loadHist()}
+let _uid=null;async function uid(){if(_uid)return _uid;try{const u=await claude.use('user');_uid=u?await u.id():'t'}catch(e){_uid='t'}return _uid}
+async function loadHist(){const h=document.getElementById('hist');if(!db){h.innerHTML=`<span class="err">${MSG.nodb}</span>`;return}
+ try{const q=await db.collection('sessions').where('owner','==',await uid()).limit(20).get();
+ if(!q.docs.length){h.textContent="Әзірге сессиялар жоқ.";return}
+ h.innerHTML=q.docs.sort((a,b)=>b.data().created-a.data().created).map(d=>{const v=d.data();return`<p><a href="#/r/${d.id}">${esc(v.class_name)}</a> — ${new Date(v.created).toLocaleDateString('kk-KZ')}</p>`}).join('')}catch(e){h.textContent="Тарихты жүктеу мүмкін болмады."}}
+function teacher(id){clear();const u=link(id),q=qrcode(0,'M');q.addData(u);q.make();
+ A.innerHTML=`<div class="logo">КӨҢІЛ-КҮЙ</div><div class="pres card" id="pr"><div class="bg"></div><h1>БҮГІНГІ КӨҢІЛ КҮЙІҢ ҚАНДАЙ?</h1><p>QR-кодты сканерлеп, өз көңіл күйіңді белгіле!</p><div class="qr" role="img" aria-label="Оқушыларға арналған QR-код">${q.createSvgTag({scalable:true,margin:4})}</div><p style="word-break:break-all;font-size:14px;opacity:.8">${esc(u)}</p><h2 id="cnt">ҚАТЫСҚАНДАР: 0</h2><div class="bar" style="max-width:480px;margin:auto"><i id="pb" style="width:0;background:#36D399"></i></div><div class="dots" id="dots"></div></div>
+ <div class="card"><button id="fs">Толық экран</button><button class="s" id="cp">Сілтемені көшіру</button><button class="s" id="dl">QR жүктеу</button><button class="s" id="ps"></button><button class="s" id="en">Сессияны аяқтау</button><a class="btn" href="#/r/${id}">Нәтижелерді ашу</a><a class="btn s" style="background:none;color:inherit;border:2px solid var(--v)" href="#/">Жаңа сессия</a><p id="e" class="err"></p></div>`;
+ const st=s=>db.doc('sessions/'+id).update({status:s});let cur=null;
+ fs.onclick=()=>{const p=document.getElementById('pr');p.requestFullscreen?p.requestFullscreen().catch(()=>e.textContent="Толық экран режимі қолжетімсіз."):e.textContent="Толық экран режимі қолжетімсіз."};
+ cp.onclick=async()=>{try{await navigator.clipboard.writeText(u);cp.textContent="Көшірілді ✓"}catch(x){prompt("Сілтеме:",u)}};
+ dl.onclick=async()=>{try{const d=await claude.use('downloads');await d.save({filename:'qr-'+id+'.svg',data:q.createSvgTag({scalable:true,margin:4})})}catch(x){e.textContent="Жүктеу мүмкін болмады."}};
+ ps.onclick=()=>st(cur==='paused'?'active':'paused').catch(()=>e.textContent=MSG.fail);
+ en.onclick=()=>{if(confirm("Сессияны аяқтайсыз ба? Одан кейін жауап қабылданбайды."))st('closed').then(()=>location.hash='#/r/'+id).catch(()=>e.textContent=MSG.fail)};
+ watch(id,(s,rs,bad)=>{if(bad){A.innerHTML=`<div class="card err">${MSG.bad}</div>`;return}if(!s)return;cur=s.status;const n=rs.length;
+  ps.textContent=cur==='paused'?"Жалғастыру":"Тоқтата тұру";cnt.textContent="ҚАТЫСҚАНДАР: "+n+(s.expected?" / "+s.expected:"");pb.style.width=(s.expected?Math.min(100,n/s.expected*100):Math.min(100,n*4))+"%";
+  dots.innerHTML=rs.map(x=>`<i style="background:${M[x-1][2]}"></i>`).join('')})}
+function results(id){clear();A.innerHTML=`<div class="card">Жүктелуде…</div>`;
+ watch(id,(s,rs,bad)=>{if(bad){A.innerHTML=`<div class="card err">${MSG.bad}</div>`;return}if(!s)return;const t=stats(rs,s.expected),R=report(t),c=t.avg?colorOf(t.avg):'#7657F6',mx=Math.max(1,...t.d);
+ const ring=t.avg?`<svg viewBox="0 0 120 120" width="200" role="img" aria-label="Орташа балл ${fmt(t.avg)} / 10"><circle cx="60" cy="60" r="50" fill="none" stroke="#a78bfa33" stroke-width="12"/><circle cx="60" cy="60" r="50" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${t.avg/10*314} 314" transform="rotate(-90 60 60)" style="transition:stroke-dasharray .8s"/><text x="60" y="68" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor">${fmt(t.avg)}</text></svg>`:'';
+ A.innerHTML=`<div class="logo">КӨҢІЛ-КҮЙ · ${esc(s.class_name)}</div>
+ <div class="card" style="text-align:center"><p class="mut">СЫНЫПТЫҢ ЖАЛПЫ КӨҢІЛ КҮЙІ</p>${t.n?`<div class="big" style="color:${c}">${fmt(t.avg)} / 10</div><h2>${label(t.avg)}</h2>${ring}`:`<h2>Әзірге жауаптар жоқ</h2>`}</div>
+ <div class="card"><h3>Жауаптар бөлінісі</h3><div class="col" role="img" aria-label="${t.d.map((k,i)=>(i+1)+' балл: '+k+' оқушы').join('; ')}">${t.d.map((k,i)=>`<div title="${i+1} балл: ${k} оқушы, барлық жауаптың ${t.n?Math.round(k/t.n*100):0}%-ы.">${k}<b style="height:${k/mx*130}px;background:${M[i][2]}"></b>${i+1}<br>${t.n?Math.round(k/t.n*100):0}%</div>`).join('')}</div></div>
+ <div class="grid">${CATS.map((k,i)=>`<div class="card"><div style="font-size:34px">${k[1]}</div><b>${k[0]} (${k[2]}–${k[3]})</b><p>${t.cats[i].k} оқушы · ${t.cats[i].p}%</p><div class="bar"><i style="width:${t.cats[i].p}%;background:${k[4]}"></i></div></div>`).join('')}</div>
+ <div class="card"><h3>Қатысу</h3><p>Жауап бергендер: <b>${t.n}</b></p>${s.expected?`<p>Күтілетін оқушылар саны: <b>${s.expected}</b></p><p>Қатысу деңгейі: <b>${t.part}%</b></p><p>Жауап бермегендер: <b>${Math.max(0,s.expected-t.n)}</b></p>${t.n>s.expected?'<p class="err">Назар аударыңыз: жауап саны күтілгеннен көп.</p>':''}`:''}</div>
+ <div class="card"><h3>ЖАСАНДЫ ИНТЕЛЛЕКТ ТАЛДАУЫ</h3>${R.map(r=>`<h4>${r[0]}</h4><p>${r[1]}</p>`).join('')}</div>
+ ${s.status==='closed'?'<div class="card" style="text-align:center"><h2>ӘР КӨҢІЛ КҮЙ МАҢЫЗДЫ. НАЗАРЛАРЫҢЫЗҒА РАҚМЕТ!</h2></div>':''}
+ <a class="btn" href="#/t/${id}">Басқару панелі</a>`})}
+function student(id){clear();let v=5,sent=false,tok;try{tok=localStorage.getItem('t'+id)||(Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('t'+id,tok);sent=localStorage.getItem('d'+id)==='1'}catch(e){tok=Math.random().toString(36).slice(2)}
+ const done=()=>{document.body.style.setProperty('--c','#22C55E');A.innerHTML=`<div class="stu" style="padding:20px"><div class="emo">💚</div><h1>ЖАУАБЫҢ ҚАБЫЛДАНДЫ! 💚</h1><p>Қатысқаның үшін рақмет!</p><p>Сенің жауабың сыныптың жалпы нәтижесіне қосылды.</p></div>`};
+ if(sent)return done();
+ A.innerHTML=`<div class="stu"><h1>БҮГІН ӨЗІҢДІ ҚАЛАЙ СЕЗІНІП ТҰРСЫҢ?</h1><p>Өзіңе сәйкес санды таңда. Әр көңіл күй маңызды.</p><div class="emo" id="em"></div><h2 id="lb"></h2><p id="ms" class="mut"></p>
+ <input type="range" id="rg" min="1" max="10" step="1" value="5" aria-label="Көңіл күй бағасы, 1-ден 10-ға дейін"><div class="ticks">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<span>${n}</span>`).join('')}</div>
+ <button class="sub" id="go">КӨҢІЛ КҮЙІМДІ ЖІБЕРУ ✨</button><p id="e" class="err" role="alert"></p><p class="mut">Жауабың анонимді түрде есепке алынады.</p></div>`;
+ const up=()=>{const m=M[v-1];document.body.style.setProperty('--c',m[2]);em.textContent=m[1];lb.textContent=v+' · '+m[0];lb.style.color=m[2];ms.textContent=m[3];em.classList.add('b');setTimeout(()=>em.classList.remove('b'),200)};
+ rg.oninput=()=>{v=parseInt(rg.value);up()};up();
+ go.onclick=async()=>{if(!db){e.textContent=MSG.nodb;return}if(!Number.isInteger(v)||v<1||v>10)return;go.disabled=true;e.textContent='';
+  try{const s=(await db.doc('sessions/'+id).get()).data();if(!s){e.textContent=MSG.bad;go.disabled=false;return}
+   if(s.status==='closed'){e.textContent=MSG.closed;return}if(s.status==='paused'){e.textContent=MSG.paused;go.disabled=false;return}
+   await db.doc('sessions/'+id+'/responses/'+tok).set({score:v,created:Date.now()});try{localStorage.setItem('d'+id,'1')}catch(x){}done()}catch(x){e.textContent=MSG.fail;go.disabled=false}}}
+function route(){document.body.style.removeProperty('--c');const p=location.hash.replace('#/','').split('/');
+ if(!db&&p[0]!==''&&!window._wait){}
+ ({'':home,t:teacher,m:student,r:results}[p[0]]||home)(p[1])}
+window.addEventListener('hashchange',route);
+route();
+(async()=>{try{db=await claude.use('db')}catch(e){}route()})();
+</script></body></html>
